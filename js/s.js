@@ -1,7 +1,6 @@
 const words = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam quasi sint voluptas, pariatur est a odio unde suscipit culpa vel dignissimos nobis distinctio dolores iste velit sed repellendus aliquid in nisi tenetur corporis repudiandae illo ex commodi? Totam eius asperiores veritatis est aliquid hic delectus maxime sint eveniet. Corporis nobis dolorem, ad velit porro nemo. Quo labore corporis consequuntur sit ad culpa reiciendis tenetur. Minima, dignissimos doloribus? Commodi cumque ipsam eius perferendis pariatur, a dolorum laudantium harum dolores alias, maxime temporibus similique, iste beatae tempora accusantium aliquid saepe distinctio non quia. Voluptatum mollitia asperiores dignissimos vero beatae impedit debitis recusandae.'.split(' ');
 const wordCount = words.length;
-const gameTime = 60 * 1000;
-
+const gameTime = 20 * 1000;
 
 window.timer = null;
 window.gameStart = null;
@@ -46,41 +45,11 @@ function getWpm(){
   })
   return correctWords.length / gameTime * 60000;
 }
-function getCpm(){
-  
-  const letters = [...document.querySelectorAll('.letter.correct')];
-  const lastTypedLetter = document.querySelector('.letter.current');
-  const lastTypedLetterIndex = letters.indexOf(lastTypedLetter);
-  const typedLetters = letters.slice(0, lastTypedLetterIndex);
-  const correctLetters = typedLetters.filter(letter => {
-    const letters = [...letter.children];
-    const incorrectLetters = letters.filter(letter => letter.className.includes('incorrect'));
-    const correctLetters = letters.filter(letter => letter.className.includes('correct'));
-    return incorrectLetters.length === 0 && correctLetters.length === letters.length;
-  })
-  return correctLetters.length / gameTime * 60000;
-}
-function getMistake(){
-  
-  const letters = [...document.querySelectorAll('.letter.incorrect')];
-  const lastTypedLetter = document.querySelector('.letter.current');
-  const lastTypedLetterIndex = letters.indexOf(lastTypedLetter);
-  const typedLetters = letters.slice(0, lastTypedLetterIndex);
-  const correctLetters = typedLetters.filter(letter => {
-    const letters = [...letter.children];
-    const incorrectLetters = letters.filter(letter => letter.className.includes('incorrect'));
-    const correctLetters = letters.filter(letter => letter.className.includes('correct'));
-    return incorrectLetters.length === 0 && correctLetters.length === letters.length;
-  })
-  return correctLetters.length / gameTime * 60000;
-}
 
 function gameOver() {
   clearInterval(window.timer);
   addClass(document.getElementById('game'), 'over');
-  document.getElementById('info').innerHTML = `WPM ${getWpm()}`;
-  document.getElementById('cpm').innerHTML = `CPM ${getCpm()}`;
-  document.getElementById('mistake').innerHTML = `mistake ${getMistake()}`;
+  document.getElementById('info').innerHTML = `WPM ${getWpm()}`
 
 }
 
@@ -144,16 +113,10 @@ document.getElementById('game').addEventListener('keyup',e => {
   
   if (isSpace) {
     if(expected !== ' '){
-        addClass(currentLetter, key === expected ? 'correct' : 'incorrect');
-        removeClass(currentLetter, 'current');
-  
-        if (currentLetter.nextSibling) {
-          addClass(currentLetter.nextSibling, 'current');
-        }
-      // const lettersToInvalidate = [...document.querySelectorAll('.word.current .letter:not(.corrent)')];
-      // lettersToInvalidate.forEach(letter => {
-      //   addClass(letter, 'incorrect')
-      // });
+      const lettersToInvalidate = [...document.querySelectorAll('.word.current .letter:not(.corrent)')];
+      lettersToInvalidate.forEach(letter => {
+        addClass(letter, 'incorrect')
+      });
     }
     removeClass(currentWord, 'current');
     addClass(currentWord.nextSibling, 'current');
