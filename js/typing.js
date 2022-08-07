@@ -15,10 +15,11 @@ function removeClass(e,name) {
 
 function randomWord(){
     const randomIndex = Math.ceil(Math.random()*wordCount);
-    return words[randomIndex - 1];
+    console.log(words[randomIndex - 1]);
 }
 
 function formatWord(word){
+console.log(word)
   return `<div class='word'><span class='letter'>${word.split('').join('</span><span class="letter">')}</span></div>`;
 }
 
